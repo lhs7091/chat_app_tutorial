@@ -1,3 +1,4 @@
+import 'package:chat_app_tutorial/helper/helperfunctions.dart';
 import 'package:chat_app_tutorial/services/auth.dart';
 import 'package:chat_app_tutorial/services/database.dart';
 import 'package:chat_app_tutorial/views/chatRoomsScreen.dart';
@@ -26,16 +27,21 @@ class _SignUpState extends State<SignUp> {
 
   signMeUp(){
     if(formKey.currentState.validate()){
+      //print("${val.uid}");
+      Map<String, String> userInfoMap = {
+        "name" : userNameTextEdittingController.text,
+        "email" : emailTextEdittingController.text
+      };
+
+      HelperFunctions.saveUserEmailSharedPreference(emailTextEdittingController.text);
+      HelperFunctions.saveUserNameSharedPreference(userNameTextEdittingController.text);
+
       setState(() {
         isLoading = true;
       });
-    authMethods.signUpwithEmailAndPassword(emailTextEdittingController.text, passwordTextEdittingController.text)
+
+      authMethods.signUpwithEmailAndPassword(emailTextEdittingController.text, passwordTextEdittingController.text)
         .then((val){
-          //print("${val.uid}");
-          Map<String, String> userInfoMap = {
-            "name" : userNameTextEdittingController.text,
-            "email" : emailTextEdittingController.text
-          };
           databaseMethods.uploadUserInfo(userInfoMap);
 
           Navigator.pushReplacement(context, MaterialPageRoute(
